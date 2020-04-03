@@ -173,11 +173,11 @@
 
 
 ////////***********THIS IS WHERE MY SECOND ATTEMPT STARTS - DO NOT CHANGE CODE ABOVE!!!!!!!!! */
-var svgWidth = 960;
+var svgWidth = 850;
 var svgHeight = 500;
 
 var margin = {
-  top: 20,
+  top: 50,
   right: 40,
   bottom: 80,
   left: 100
@@ -234,7 +234,8 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   circlesGroup
     .transition()
     .duration(1000)
-    .attr("cx", d => newXScale(d[chosenXAxis]));
+    .attr("cx", d => newXScale(d[chosenXAxis]))
+
 
   return circlesGroup;
 }
@@ -244,7 +245,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   var label;
 
   if (chosenXAxis === "poverty") {
-    label = "Poverty (%):";
+    label = "Poverty (%):"
+
   } else {
     label = "Annual Income ($)";
   }
@@ -340,12 +342,12 @@ d3.csv("assets/data/data.csv")
       .attr("opacity", ".5")
 
 
-    // .on("mouseover", function (data) {
-    //   toolTip.show(data)
-    // })
-    // .on("mouseout", function (data) {
-    //   toolTip.hide(data)
-    // });
+      .on("mouseover", function (data) {
+        toolTip.show(data)
+      })
+      .on("mouseout", function (data) {
+        toolTip.hide(data)
+      });
 
 
 
@@ -360,10 +362,10 @@ d3.csv("assets/data/data.csv")
           .enter()
           .append("tspan")
           .attr("x", function (data) {
-            return xLinearScale(data.poverty);
+            return xLinearScale(data.poverty - 0.2);
           })
           .attr("y", function (data) {
-            return yLinearScale(data.healthcare);
+            return yLinearScale(data.healthcare - 0.2);
           })
           .text(function (data) {
             return data.abbr
@@ -371,21 +373,14 @@ d3.csv("assets/data/data.csv")
       }
 
 
-      else if (chosenXAxis === "income") {
+      else {
         chartGroup.append("text")
           .style("font-size", "12px")
           .style("fill", "white")
           .selectAll("tspan")
-
           .data(stateData)
           .enter()
           .append("tspan")
-          .attr("x", function (data) {
-            return xLinearScale(data.income);
-          })
-          .attr("y", function (data) {
-            return yLinearScale(data.healthcare);
-          })
           .text(function (data) {
             return data.abbr
           })
@@ -395,24 +390,42 @@ d3.csv("assets/data/data.csv")
 
     circleText()
 
+    // var povertyCircle = chartGroup.append("text")
+    //   .style("font-size", "12px")
+    //   .style("fill", "white")
+    //   .selectAll("tspan")
+    //   .data(stateData)
+    //   .enter()
+    //   .append("tspan")
+    //   .attr("x", function (data) {
+    //     return xLinearScale(data.poverty - 0.2);
+    //   })
+    //   .attr("y", function (data) {
+    //     return yLinearScale(data.healthcare - 0.2);
+    //   })
+    //   .text(function (data) {
+    //     return data.abbr
+    //   })
 
-    // and place them in the center of our dots.
-    // chartGroup
-    //   .append("text")
-    //   // We return the abbreviation to .text, which makes the text the abbreviation.
-    //   .text(function (d) {
-    //     return d.abbr;
+    // var incomeCircle = chartGroup.append("text")
+    //   .style("font-size", "12px")
+    //   .style("fill", "white")
+    //   .selectAll("tspan")
+    //   .data(stateData)
+    //   .enter()
+    //   .append("tspan")
+    //   .attr("x", function (data) {
+    //     return xLinearScale(data.income - 0.2);
     //   })
-    //   // Now place the text using our scale.
-    //   .attr("dx", function (d) {
-    //     return xLinearScale(d[curX]);
+    //   .attr("y", function (data) {
+    //     return yLinearScale(data.healthcare - 0.2);
     //   })
-    //   .attr("dy", function (d) {
-    //     // When the size of the text is the radius,
-    //     // adding a third of the radius to the height
-    //     // pushes it into the middle of the circle.
-    //     return yScale(d[curY]);
+    //   .text(function (data) {
+    //     return data.abbr
     //   })
+
+
+
     // Create group for  2 x- axis labels
     var labelsGroup = chartGroup
       .append("g")
@@ -467,6 +480,8 @@ d3.csv("assets/data/data.csv")
         // updates circles with new x values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
 
+
+
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
@@ -479,7 +494,11 @@ d3.csv("assets/data/data.csv")
           povertyLabel.classed("active", true).classed("inactive", false);
         }
       }
-    });
+    })
+
+
+
+
   })
   .catch(function (error) {
     console.log(error);
